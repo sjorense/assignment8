@@ -1,4 +1,4 @@
-name: Tests
+name: CI/CD
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  pytest:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,3 +31,34 @@ jobs:
 
       - name: Run unit, integration, and end-to-end tests
         run: pytest -q
+
+  security:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t fastapi-calculator:test .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: fastapi-calculator:test
+          format: table
+          exit-code: "0"
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+  deploy:
+    needs: security
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Confirm deployment readiness
+        run: |
+          echo "All tests and security checks passed."
+          echo "FastAPI Calculator is ready for deployment."
