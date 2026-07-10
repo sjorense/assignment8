@@ -1,264 +1,145 @@
-# 📦 Project Setup
+# FastAPI Calculator
 
----
+This project is a small FastAPI web calculator that performs addition, subtraction, multiplication, and division. It includes a browser-based interface, API endpoints for each operation, automated tests, Docker support, and a GitHub Actions workflow that runs the test suite on every push to `main`.
 
-# 🧩 1. Install Homebrew (Mac Only)
+## Features
 
-> Skip this step if you're on Windows.
+- FastAPI application with HTML frontend
+- Calculator operations for add, subtract, multiply, and divide
+- Division-by-zero error handling
+- Logging for successful operations and errors
+- Unit tests for arithmetic functions
+- Integration tests for API endpoints
+- End-to-end tests with Playwright
+- GitHub Actions CI workflow for automated testing
+- Dockerfile and Docker Compose configuration
 
-Homebrew is a package manager for macOS.  
-You’ll use it to easily install Git, Python, Docker, etc.
+## Project Structure
 
-**Install Homebrew:**
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```text
+.
+├── app/operations/__init__.py      # Calculator operation functions
+├── main.py                         # FastAPI application and routes
+├── templates/index.html            # Browser calculator interface
+├── tests/unit/                     # Unit tests
+├── tests/integration/              # API integration tests
+├── tests/e2e/                      # Playwright end-to-end tests
+├── .github/workflows/test.yml      # GitHub Actions test workflow
+├── Dockerfile
+├── docker-compose.yml
+├── pytest.ini
+└── requirements.txt
 ```
 
-**Verify Homebrew:**
+## Run Locally
 
-```bash
-brew --version
-```
-
-If you see a version number, you're good to go.
-
----
-
-# 🧩 2. Install and Configure Git
-
-## Install Git
-
-- **MacOS (using Homebrew)**
-
-```bash
-brew install git
-```
-
-- **Windows**
-
-Download and install [Git for Windows](https://git-scm.com/download/win).  
-Accept the default options during installation.
-
-**Verify Git:**
-
-```bash
-git --version
-```
-
----
-
-## Configure Git Globals
-
-Set your name and email so Git tracks your commits properly:
-
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "your_email@example.com"
-```
-
-Confirm the settings:
-
-```bash
-git config --list
-```
-
----
-
-## Generate SSH Keys and Connect to GitHub
-
-> Only do this once per machine.
-
-1. Generate a new SSH key:
-
-```bash
-ssh-keygen -t ed25519 -C "your_email@example.com"
-```
-
-(Press Enter at all prompts.)
-
-2. Start the SSH agent:
-
-```bash
-eval "$(ssh-agent -s)"
-```
-
-3. Add the SSH private key to the agent:
-
-```bash
-ssh-add ~/.ssh/id_ed25519
-```
-
-4. Copy your SSH public key:
-
-- **Mac/Linux:**
-
-```bash
-cat ~/.ssh/id_ed25519.pub | pbcopy
-```
-
-- **Windows (Git Bash):**
-
-```bash
-cat ~/.ssh/id_ed25519.pub | clip
-```
-
-5. Add the key to your GitHub account:
-   - Go to [GitHub SSH Settings](https://github.com/settings/keys)
-   - Click **New SSH Key**, paste the key, save.
-
-6. Test the connection:
-
-```bash
-ssh -T git@github.com
-```
-
-You should see a success message.
-
----
-
-# 🧩 3. Clone the Repository
-
-Now you can safely clone the course project:
-
-```bash
-git clone <repository-url>
-cd <repository-directory>
-```
-
----
-
-# 🛠️ 4. Install Python 3.10+
-
-## Install Python
-
-- **MacOS (Homebrew)**
-
-```bash
-brew install python
-```
-
-- **Windows**
-
-Download and install [Python for Windows](https://www.python.org/downloads/).  
-✅ Make sure you **check the box** `Add Python to PATH` during setup.
-
-**Verify Python:**
-
-```bash
-python3 --version
-```
-or
-```bash
-python --version
-```
-
----
-
-## Create and Activate a Virtual Environment
-
-(Optional but recommended)
+Create and activate a virtual environment:
 
 ```bash
 python3 -m venv venv
-source venv/bin/activate   # Mac/Linux
-venv\Scripts\activate.bat  # Windows
+source venv/bin/activate
 ```
 
-### Install Required Packages
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+playwright install chromium
 ```
 
----
-
-# 🐳 5. (Optional) Docker Setup
-
-> Skip if Docker isn't used in this module.
-
-## Install Docker
-
-- [Install Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/)
-- [Install Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/)
-
-## Build Docker Image
-
-```bash
-docker build -t <image-name> .
-```
-
-## Run Docker Container
-
-```bash
-docker run -it --rm <image-name>
-```
-
----
-
-# 🚀 6. Running the Project
-
-- **Without Docker**:
+Start the application:
 
 ```bash
 python main.py
 ```
 
-(or update this if the main script is different.)
+Open the app in a browser:
 
-- **With Docker**:
-
-```bash
-docker run -it --rm <image-name>
+```text
+http://127.0.0.1:8000
 ```
 
----
+## API Endpoints
 
-# 📝 7. Submission Instructions
+Each endpoint accepts JSON with two numbers:
 
-After finishing your work:
-
-```bash
-git add .
-git commit -m "Complete Module X"
-git push origin main
+```json
+{
+  "a": 10,
+  "b": 5
+}
 ```
 
-Then submit the GitHub repository link as instructed.
+Available endpoints:
 
----
+- `POST /add`
+- `POST /subtract`
+- `POST /multiply`
+- `POST /divide`
 
-# 🔥 Useful Commands Cheat Sheet
+Example response:
 
-| Action                         | Command                                          |
-| ------------------------------- | ------------------------------------------------ |
-| Install Homebrew (Mac)          | `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` |
-| Install Git                     | `brew install git` or Git for Windows installer |
-| Configure Git Global Username  | `git config --global user.name "Your Name"`      |
-| Configure Git Global Email     | `git config --global user.email "you@example.com"` |
-| Clone Repository                | `git clone <repo-url>`                          |
-| Create Virtual Environment     | `python3 -m venv venv`                           |
-| Activate Virtual Environment   | `source venv/bin/activate` / `venv\Scripts\activate.bat` |
-| Install Python Packages        | `pip install -r requirements.txt`               |
-| Build Docker Image              | `docker build -t <image-name> .`                |
-| Run Docker Container            | `docker run -it --rm <image-name>`               |
-| Push Code to GitHub             | `git add . && git commit -m "message" && git push` |
+```json
+{
+  "result": 15
+}
+```
 
----
+Division by zero returns an error response:
 
-# 📋 Notes
+```json
+{
+  "error": "Cannot divide by zero!"
+}
+```
 
-- Install **Homebrew** first on Mac.
-- Install and configure **Git** and **SSH** before cloning.
-- Use **Python 3.10+** and **virtual environments** for Python projects.
-- **Docker** is optional depending on the project.
+## Run Tests
 
----
+Run the full test suite:
 
-# 📎 Quick Links
+```bash
+pytest -q
+```
 
-- [Homebrew](https://brew.sh/)
-- [Git Downloads](https://git-scm.com/downloads)
-- [Python Downloads](https://www.python.org/downloads/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [GitHub SSH Setup Guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
+The suite includes:
+
+- Unit tests for `add`, `subtract`, `multiply`, and `divide`
+- Integration tests for all FastAPI calculator endpoints
+- End-to-end Playwright tests that interact with the browser UI
+
+## Docker
+
+Build the Docker image:
+
+```bash
+docker build -t fastapi-calculator .
+```
+
+Run the container:
+
+```bash
+docker run --rm -p 8000:8000 fastapi-calculator
+```
+
+Or use Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+## Continuous Integration
+
+GitHub Actions is configured in `.github/workflows/test.yml`. On pushes and pull requests to `main`, the workflow:
+
+1. Checks out the repository.
+2. Sets up Python.
+3. Installs dependencies and Playwright Chromium.
+4. Runs the complete pytest suite.
+
+## Repository
+
+GitHub repository:
+
+```text
+https://github.com/sjorense/assignment8
+```
